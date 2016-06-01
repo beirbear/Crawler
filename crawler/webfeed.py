@@ -93,7 +93,7 @@ class Settrade(object):
                     if line.string == self.__get_consensus_string():
                         print("Downloading IAA Consensus for symbol {0}".format(symbol))
                         consensus = self.__download(self.__domain + line['href'])
-                        self.__dump_content(consensus, self.__get_file_name(symbol + '.ccs.'))
+                        self.__dump_content(consensus, self.__get_file_name(symbol + '.ccs'))
 
-            time.sleep(0)
+            time.sleep(random.random() * 10)
 
