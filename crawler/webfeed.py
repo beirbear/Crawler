@@ -29,7 +29,7 @@ class Settrade(object):
         r = http.request('GET', url)
 
         if r.status == 200:
-            return r.data
+            return r.data.decode('tis-620')
 
         else:
             if trial < 5:
@@ -87,9 +87,12 @@ class Settrade(object):
                 # Extract link to consensus
                 soup = BeautifulSoup(res, 'html.parser')
                 tmp = soup.find_all("ul", {"class": "nav nav-tabs nav-tabs-stt nav-tabs-many"})
-                for line in tmp[0].final_all("a"):
+                soup = BeautifulSoup(str(tmp[0]), 'html.parser')
+                for line in soup.final_all("a"):
                     if line.string == self.__get_consensus_string():
                         print("Downloading IAA Consensus for symbol {0}".format(symbol))
                         consensus = self.__download(self.__domain + line['href'])
                         self.__dump_content(consensus, self.__get_file_name(symbol + '.ccs.'))
+
+            time.sleep(0)
 
