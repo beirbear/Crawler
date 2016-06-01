@@ -76,7 +76,7 @@ class Settrade(object):
             res = self.__download(self.__get_address(symbol))
             if res:
                 self.__dump_content(res, self.__get_file_name(symbol))
-                if res.index(self.__get_consensus_string()) > 0:
+                if res.find(self.__get_consensus_string()) > 0:
                     # Extract link to consensus
                     soup = BeautifulSoup(res, 'html.parser')
                     tmp = soup.find_all("ul", {"class": "nav nav-tabs nav-tabs-stt nav-tabs-many"})
