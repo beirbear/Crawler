@@ -77,6 +77,7 @@ class Settrade(object):
             print("Today is a holiday.")
             exit()
 
+        self.__load_symbols()
         for symbol in self.__symbols:
             print("Downloading symbol {0}".format(symbol))
             res = self.__download(self.__get_address(symbol))
