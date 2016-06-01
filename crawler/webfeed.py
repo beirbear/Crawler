@@ -84,16 +84,17 @@ class Settrade(object):
             symbol = symbol.strip()
             print("Downloading symbol {0}".format(symbol))
             res = self.__download(self.__get_address(symbol))
-            self.__dump_content(res, self.__get_file_name(symbol))
-            if res.index(self.__get_consensus_string()) > 0:
-                # Extract link to consensus
-                soup = BeautifulSoup(res, 'html.parser')
-                tmp = soup.find_all("ul", {"class": "nav nav-tabs nav-tabs-stt nav-tabs-many"})
-                for line in tmp[0].find_all("a"):
-                    if line.string == self.__get_consensus_string():
-                        print("Downloading IAA Consensus for symbol {0}".format(symbol))
-                        consensus = self.__download(self.__domain + line['href'])
-                        self.__dump_content(consensus, self.__get_file_name(symbol + '.ccs'))
+            if res:
+                self.__dump_content(res, self.__get_file_name(symbol))
+                if res.index(self.__get_consensus_string()) > 0:
+                    # Extract link to consensus
+                    soup = BeautifulSoup(res, 'html.parser')
+                    tmp = soup.find_all("ul", {"class": "nav nav-tabs nav-tabs-stt nav-tabs-many"})
+                    for line in tmp[0].find_all("a"):
+                        if line.string == self.__get_consensus_string():
+                            print("Downloading IAA Consensus for symbol {0}".format(symbol))
+                            consensus = self.__download(self.__domain + line['href'])
+                            self.__dump_content(consensus, self.__get_file_name(symbol + '.ccs'))
 
-            time.sleep(random.random() * 10)
+                time.sleep(random.random() * 10)
 
