@@ -46,7 +46,7 @@ class Settrade(object):
             t.write(content)
 
     def __is_today_holiday(self):
-        with open('configuration/holidays.txt', 'rt') as t:
+        with open('crawler/configuration/holidays.txt', 'rt') as t:
             tmp = t.readlines()
 
             if time.strftime("%Y%m%d") in tmp:
@@ -55,7 +55,7 @@ class Settrade(object):
             return False
 
     def __load_symbols(self):
-        with open('configuration/symbols.txt', 'rt') as t:
+        with open('crawler/configuration/symbols.txt', 'rt') as t:
             tmp = t.readlines()
 
             if len(tmp) > 0:
