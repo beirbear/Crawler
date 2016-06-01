@@ -68,7 +68,7 @@ class Settrade(object):
 
         # Check for week day
         import datetime
-        if datetime.datetime.now().isoweekday() in range(1, 6):
+        if datetime.datetime.now().isoweekday() not in range(1, 6):
             print("Today is a weekend.")
             exit()
 
