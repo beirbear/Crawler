@@ -110,9 +110,9 @@ class Settrade(object):
             if content:
                 res = BeautifulSoup(content, 'html.parser').find_all("table", {"id": "stock-list", "class": "table table-info table-hover"})
                 tmp = BeautifulSoup(str(res), 'html.parser').find_all("a", {"class": "colorGreen"})
-                for i in range(len(tmp)):
-                    if tmp[i]['href']:
-                        print(tmp[i].text)
+                for item in tmp:
+                    if item['href'].find("txtSymbol=") > 0:
+                        print(item.text.strip().replace(" ", "").replace("&", "%26"))
 
             else:
                 print("Cannot update symbol")
