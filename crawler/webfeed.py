@@ -56,7 +56,9 @@ class Settrade(object):
 
     def __load_symbols(self):
         with open('crawler/configuration/symbols.txt', 'rt') as t:
+            from random import shuffle
             tmp = t.readlines()
+            shuffle(tmp)
 
             if len(tmp) > 0:
                 self.__symbols = tmp
@@ -87,8 +89,7 @@ class Settrade(object):
                 # Extract link to consensus
                 soup = BeautifulSoup(res, 'html.parser')
                 tmp = soup.find_all("ul", {"class": "nav nav-tabs nav-tabs-stt nav-tabs-many"})
-                soup = BeautifulSoup(str(tmp[0]), 'html.parser')
-                for line in soup.final_all("a"):
+                for line in tmp[0].find_all("a"):
                     if line.string == self.__get_consensus_string():
                         print("Downloading IAA Consensus for symbol {0}".format(symbol))
                         consensus = self.__download(self.__domain + line['href'])
