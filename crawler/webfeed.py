@@ -109,7 +109,7 @@ class Settrade(object):
             content = self.__download(get_link(char))
             if content:
                 res = BeautifulSoup(content, 'html.parser').find_all("table", {"id": "stock-list", "class": "table table-info table-hover"})
-                tmp = res.find_all("a", {"class": "colorGreen"})
+                tmp = BeautifulSoup(str(res), 'html.parser').find_all("a", {"class": "colorGreen"})
                 for item in tmp:
                     print(item['href'])
                     exit()
