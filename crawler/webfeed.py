@@ -39,7 +39,7 @@ class Settrade(object):
                 return None
 
     def __dump_content(self, content, file_name):
-        if os.path.isdir(self.__storage):
+        if not os.path.isdir(self.__storage):
             os.mkdir(self.__storage)
 
         with open(self.__storage + '/' + file_name, 'wt') as t:
@@ -79,6 +79,7 @@ class Settrade(object):
 
         self.__load_symbols()
         for symbol in self.__symbols:
+            symbol = symbol.strip()
             print("Downloading symbol {0}".format(symbol))
             res = self.__download(self.__get_address(symbol))
             self.__dump_content(res, self.__get_file_name(symbol))
