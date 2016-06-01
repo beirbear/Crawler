@@ -29,7 +29,7 @@ class Settrade(object):
         r = http.request('GET', url)
 
         if r.status == 200:
-            return r.data.decode('tis-620')
+            return r.data.decode('tis-620', 'ignore')
 
         else:
             if trial < 5:
@@ -54,20 +54,7 @@ class Settrade(object):
 
             return False
 
-    def __load_symbols(self):
-        with open('crawler/configuration/symbols.txt', 'rt') as t:
-            from random import shuffle
-            tmp = t.readlines()
-            shuffle(tmp)
-
-            if len(tmp) > 0:
-                self.__symbols = tmp
-            else:
-                print("No symbols found.")
-                exit()
-
     def download_all(self):
-        self.update_stock_symbols()
 
         # Check for week day
         import datetime
@@ -80,7 +67,9 @@ class Settrade(object):
             print("Today is a holiday.")
             exit()
 
-        self.__load_symbols()
+        print("Downloading stock symbols")
+        self.get_stock_symbol()
+
         for symbol in self.__symbols:
             symbol = symbol.strip()
             print("Downloading symbol {0}".format(symbol))
@@ -93,11 +82,14 @@ class Settrade(object):
                     tmp = soup.find_all("ul", {"class": "nav nav-tabs nav-tabs-stt nav-tabs-many"})
                     for line in tmp[0].find_all("a"):
                         if line.string == self.__get_consensus_string():
-                            print("Downloading IAA Consensus for symbol {0}".format(symbol))
                             consensus = self.__download(self.__domain + line['href'])
                             self.__dump_content(consensus, self.__get_file_name(symbol + '.ccs'))
 
-                time.sleep(random.random() * 10)
+                # time.sleep(random.random() * 10)
+
+    def get_stock_symbol(self):
+        while not self.update_stock_symbols():
+            time.sleep(10)
 
     def update_stock_symbols(self):
 
@@ -112,11 +104,11 @@ class Settrade(object):
                 tmp = BeautifulSoup(str(res), 'html.parser').find_all("a", {"class": "colorGreen"})
                 for item in tmp:
                     if item['href'].find("txtSymbol=") > 0:
-                        print(item.text.strip().replace(" ", "").replace("&", "%26"))
+                        symbols_list += [item.text.strip().replace(" ", "").replace("&", "%26").replace(";", "")]
 
             else:
                 print("Cannot update symbol")
                 return False
 
+        self.__symbols = symbols_list
         return True
-        exit()
