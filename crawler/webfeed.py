@@ -70,9 +70,9 @@ class Settrade(object):
         print("Downloading stock symbols")
         self.get_stock_symbol()
 
-        for symbol in self.__symbols:
+        for i, symbol in enumerate(self.__symbols):
             symbol = symbol.strip()
-            print("Downloading symbol {0}".format(symbol))
+            print("[{1}/{2}]Downloading symbol {0}".format(symbol, i+1, len(self.__symbols)))
             res = self.__download(self.__get_address(symbol))
             if res:
                 self.__dump_content(res, self.__get_file_name(symbol))
@@ -110,5 +110,7 @@ class Settrade(object):
                 print("Cannot update symbol")
                 return False
 
+        from random import shuffle
+        shuffle(symbols_list)
         self.__symbols = symbols_list
         return True
