@@ -67,6 +67,7 @@ class Settrade(object):
                 exit()
 
     def download_all(self):
+        self.update_stock_symbols()
 
         # Check for week day
         import datetime
@@ -98,3 +99,22 @@ class Settrade(object):
 
                 time.sleep(random.random() * 10)
 
+    def update_stock_symbols(self):
+
+        def get_link(symbol):
+            return 'http://www.settrade.com/C18_Search_Symbol.jsp?txtBrokerId=IPO&selectPage=1&requestPage=%2FC18_Search_Symbol.jsp%3FtxtBrokerId%3DIPO%26selectPage%3D1&txtAlphabet={0}'.format(symbol)
+
+        symbols_list = []
+        for char in ['num', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']:
+            content = self.__download(get_link(char))
+            if content:
+                res = BeautifulSoup(content, 'html.parser').find_all("table", {"id": "stock-list", "class": "table table-info table-hover"})
+                tmp = res.find_all("a", {"class": "colorGreen"})
+                for item in tmp:
+                    print(item['href'])
+                    exit()
+            else:
+                print("Cannot update symbol")
+                return False
+
+        return True
